@@ -1,24 +1,23 @@
 import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 
-import now from './now';
-import today from './today';
-import overview from './overview';
+import home from './home';
+import activities from './activities';
 import settings from './settings';
 
 
 
-const Tab = createBottomTabNavigator();
+
+const drawer = createDrawerNavigator();
 
 
-export default function ProvasRoutes() {
+export default function () {
     return (
-    <Tab.Navigator>
-        <Tab.Screen name="now" component={now} />
-        <Tab.Screen name="today" component={today} />
-        <Tab.Screen name="overview" component={overview} />
-        <Tab.Screen name="settings" component={settings} />
-    </Tab.Navigator>
+    <drawer.Navigator>
+        <drawer.Screen name="home" component={home} />
+        <drawer.Screen name="activities" component={activities} />
+        <drawer.Screen name="settings" component={settings} />
+    </drawer.Navigator>
     );
   }
