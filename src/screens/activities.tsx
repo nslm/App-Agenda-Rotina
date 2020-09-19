@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import activities from "../routes/activities";
 import AsyncStorage from '@react-native-community/async-storage';
 import { FlatList, 
   SafeAreaView,

@@ -29,7 +29,7 @@ async function GetItem(item:string) {
   }
 };
 
-export async function saveActivities(activities:Array){
+export async function saveActivities(activities:Array<Object>){
   try {
 
     await AsyncStorage.setItem('activities', JSON.stringify(activities)); 
