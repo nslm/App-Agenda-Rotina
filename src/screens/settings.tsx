@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import AsyncStorage from '@react-native-community/async-storage';
+import { SaveItem } from '../services/storage'
 import { FlatList, SafeAreaView, ScrollView , StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const defaultData = [
@@ -58,6 +59,10 @@ const defaultData = [
  { time: '05:30', name: 'tempo livre', color:'#ffffff', colorText: '#000000' },
 ];
 
+function saveChanges(){
+    SaveItem('week',  JSON.stringify([defaultData, defaultData, defaultData, defaultData, defaultData, defaultData, defaultData]));
+};
+
 function changeItem(){
   console.log("click")
 };
@@ -75,7 +80,7 @@ const ItemActivities = ({ item, onPress, style, styleText }) => (
   </TouchableOpacity>
 );
 
-const lista = () => {
+const screen = () => {
 
   const renderItem = ({ item }) => {
     const backgroundColor = item.color;
@@ -117,6 +122,7 @@ const lista = () => {
     const value = response;
     if(value !== null){ 
       setData(JSON.parse(value));
+      console.log(data[0])
     };
   });
       
@@ -138,10 +144,15 @@ const lista = () => {
     console.log(error)  
   };
 
-
-
   return (
     <ScrollView style={styles.container}>
+      <View>
+        <TouchableOpacity style={styles.item2} onPress={saveChanges}>
+          <Text>
+            Salvar alterações
+          </Text>
+        </TouchableOpacity>
+      </View>
       <View>
           <Text style={styles.title2}>
               selecione a atividade
@@ -269,6 +280,12 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginHorizontal: 16,
   },
+  item2: {
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    backgroundColor: '#ffffff'
+  },
   title: {
     fontSize: 32,
     justifyContent: 'center',
@@ -282,4 +299,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default lista;
+export default screen;

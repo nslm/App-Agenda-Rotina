@@ -9,12 +9,6 @@ import { FlatList,
 } from "react-native";
 
 
-interface itens {
-  item: object;
-  style: object;
-  styleText: object;
-};
-
 const Item = ({ item, style, styleText }) => (
   <TouchableOpacity style={[styles.item, style]}>
     <Text style={[styles.title, styleText]}> {item.name} </Text>
@@ -38,7 +32,13 @@ export default function () {
     
     const [list, setList] = useState([
         { name: 'Tempo Livre', color:'#87CEFA', colorText: '#ffffff' },
-        { name: 'Sono', color:'#FFB6C1', colorText: '#000000' }
+        { name: 'Sono', color:'#FFB6C1', colorText: '#000000' },
+        { name: 'Aulas da faculdade', color:'#B22222', colorText: '#ffffff' },
+        { name: 'Revisar Materia', color:'#A9A9A9', colorText: '#000000' },
+        { name: 'programar', color:'#7CFC00', colorText: '#000000' },
+        { name: 'Alimentação', color:'#FFD700', colorText: '#ffffff' },
+        { name: 'Academia', color:'#8B008B', colorText: '#ffffff' },
+        { name: 'Ingles', color:'#4B0082', colorText: '#ffffff' }
     ]);
 
     try {

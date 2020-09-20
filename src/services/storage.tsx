@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import React, { useState } from 'react';
 
-async function SaveItem(name:string, item:string) {
+export async function SaveItem(name:string, item:string) {
 
     try {
 
