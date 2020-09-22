@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AsyncStorage from '@react-native-community/async-storage';
 import { SaveItem } from '../services/storage'
 import { FlatList, SafeAreaView, ScrollView , StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -60,11 +60,23 @@ const defaultData = [
 ];
 
 function saveChanges(){
-    SaveItem('week',  JSON.stringify([defaultData, defaultData, defaultData, defaultData, defaultData, defaultData, defaultData]));
+    SaveItem('week',  JSON.stringify({'segunda':defaultData, 
+                                      'terca':defaultData, 
+                                      'quarta':defaultData, 
+                                      'quinta':defaultData, 
+                                      'sexta':defaultData,
+                                      'sabado':defaultData,
+                                      'domingo':defaultData
+}));
 };
 
-function changeItem(){
-  console.log("click")
+function changeItem(data, time, name, color, colorText){
+  var day = data
+  for(var prop in day){
+      if(prop['time']==time){
+        prop = {time:time, name:name, color:color, colorText:colorText};
+      }
+  }
 };
 
 const Item = ({ item, onPress, style, styleText }) => (
@@ -81,6 +93,62 @@ const ItemActivities = ({ item, onPress, style, styleText }) => (
 );
 
 const screen = () => {
+
+
+  const [data, setData] = useState({'segunda':defaultData, 
+  'terca':defaultData, 
+  'quarta':defaultData, 
+  'quinta':defaultData, 
+  'sexta':defaultData,
+  'sabado':defaultData,
+  'domingo':defaultData
+});
+  const [activities, setActivities] = useState([
+    { name: 'Tempo Livre', color:'#87CEFA', colorText: '#ffffff' },
+    { name: 'Sono', color:'#FFB6C1', colorText: '#000000' },
+    { name: 'Aulas da faculdade', color:'#B22222', colorText: '#ffffff' },
+    { name: 'Revisar Materia', color:'#A9A9A9', colorText: '#000000' },
+    { name: 'programar', color:'#7CFC00', colorText: '#000000' },
+    { name: 'Alimentação', color:'#FFD700', colorText: '#ffffff' },
+    { name: 'Academia', color:'#8B008B', colorText: '#ffffff' },
+    { name: 'Ingles', color:'#4B0082', colorText: '#ffffff' }
+]);
+   const [selectedActivite, setSelectedActivitie] = useState(activities[0]['name']);
+   
+
+
+  useEffect(() => {
+
+  try {
+  
+    AsyncStorage.getItem('week').then((response) => {
+    const value = response;
+    if(value !== null){ 
+      setData(JSON.parse(value));
+    };
+  });
+      
+  } catch (error) {  
+    console.log("Error to get saved data");
+    console.log(error)  
+  };
+  try {
+  
+    AsyncStorage.getItem('activities').then((response) => {
+    const value = response;
+    if(value !== null){ 
+      setActivities(JSON.parse(value));
+    };
+  });
+      
+  } catch (error) {  
+    console.log("Error to get saved data");
+    console.log(error)  
+  };
+
+  });
+
+
 
   const renderItem = ({ item }) => {
     const backgroundColor = item.color;
@@ -103,46 +171,13 @@ const screen = () => {
     return (
       <ItemActivities
         item={item}
-        onPress={changeItem}
+        onPress={setSelectedActivitie(ItemActivities.name)}
         style={{ backgroundColor }}
         styleText={{ color }}
       />
     );
   };
 
-  const [data, setData] = useState([defaultData,defaultData,defaultData,defaultData,defaultData,defaultData,defaultData]);
-  const [activities, setActivities] = useState([
-    { name: 'Tempo Livre', color:'#87CEFA', colorText: '#ffffff' },
-    { name: 'Sono', color:'#FFB6C1', colorText: '#000000' }
-  ]);
-
-  try {
-  
-    AsyncStorage.getItem('week').then((response) => {
-    const value = response;
-    if(value !== null){ 
-      setData(JSON.parse(value));
-      console.log(data[0])
-    };
-  });
-      
-  } catch (error) {  
-    console.log("Error to get saved data");
-    console.log(error)  
-  };
-  try {
-  
-    AsyncStorage.getItem('activities').then((response) => {
-    const value = response;
-    if(value !== null){ 
-      setActivities(JSON.parse(value));
-    };
-  });
-      
-  } catch (error) {  
-    console.log("Error to get saved data");
-    console.log(error)  
-  };
 
   return (
     <ScrollView style={styles.container}>
@@ -181,7 +216,7 @@ const screen = () => {
           <FlatList
             horizontal={true}
            // numColumns={12}
-            data={data[0]}
+            data={data['segunda']}
             renderItem={renderItem}
             //keyExtractor={(item) => item.id}
             //extraData={selectedId}
@@ -194,7 +229,7 @@ const screen = () => {
           <FlatList
             horizontal={true}
             //numColumns={12}
-            data={data[1]}
+            data={data['terca']}
             renderItem={renderItem}
             //keyExtractor={(item) => item.id}
             //extraData={selectedId}
@@ -207,7 +242,7 @@ const screen = () => {
           <FlatList
             horizontal={true}
            // numColumns={12}
-            data={data[2]}
+            data={data['quarta']}
             renderItem={renderItem}
             //keyExtractor={(item) => item.id}
             //extraData={selectedId}
@@ -220,7 +255,7 @@ const screen = () => {
           <FlatList
             horizontal={true}
             //numColumns={12}
-            data={data[3]}
+            data={data['quinta']}
             renderItem={renderItem}
             //keyExtractor={(item) => item.id}
             //extraData={selectedId}
@@ -233,7 +268,7 @@ const screen = () => {
           <FlatList
             horizontal={true}
             //numColumns={12}
-            data={data[4]}
+            data={data['sexta']}
             renderItem={renderItem}
             //keyExtractor={(item) => item.id}
             //extraData={selectedId}
@@ -246,7 +281,7 @@ const screen = () => {
           <FlatList
             horizontal={true}
             //numColumns={12}
-            data={data[5]}
+            data={data['sabado']}
             renderItem={renderItem}
             //keyExtractor={(item) => item.id}
             //extraData={selectedId}
@@ -259,7 +294,7 @@ const screen = () => {
           <FlatList
             horizontal={true}
             //numColumns={12}
-            data={data[6]}
+            data={data['domingo']}
             renderItem={renderItem}
             //keyExtractor={(item) => item.id}
             //extraData={selectedId}
