@@ -1,3 +1,3 @@
-import now from '../../../screens/now';
+import now from '../../../screens/home/now';
 
 export default now;

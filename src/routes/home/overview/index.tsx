@@ -1,3 +1,3 @@
-import overview from '../../../screens/overview';
+import overview from '../../../screens/home/overview';
 
 export default overview;
