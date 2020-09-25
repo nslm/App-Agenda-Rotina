@@ -5,6 +5,7 @@ import { FlatList, SafeAreaView, ScrollView , StatusBar, StyleSheet, Text, Touch
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
 import { exempleData, exempleActivities } from '../../../exemples'
+import {styles} from './styles'
 
 
 const Item = ({ item, onPress, style, styleText }) => (
@@ -14,7 +15,7 @@ const Item = ({ item, onPress, style, styleText }) => (
   </TouchableOpacity>
 );
 
-const ItemActivities = ({ item, onPress, style, styleText }) => (
+const Item2 = ({ item, onPress, style, styleText }) => (
   <TouchableOpacity style={[styles.item, style]} onPress={onPress}>
     <Text style={[styles.title, styleText]}> {item.name} </Text>
   </TouchableOpacity>
@@ -24,27 +25,37 @@ const ItemActivities = ({ item, onPress, style, styleText }) => (
 
 
 const screen = () => {
+  const bs = React.createRef();
+  const fall = new Animated.Value(1);
 
   const [data, setData] = useState(exempleData);       
   const [activities, setActivities] = useState(exempleActivities);
-  const [time, setTime] = useState(activities[0]['name']);
+  const [time, setTime] = useState('06:00');
    
   function saveChanges(){
+    bs.current.snapTo(0);
     SaveItem('monday',  JSON.stringify(data));
   };
 
-  function changeItem(data, time, Activitie){
-    var day = data
+  function changeTime(time){
+    setTime(time);
+    bs.current.snapTo(2);
+  };
+
+  function changeItem(item){
+    bs.current.snapTo(1);
+    var day = data;
     for(var prop in day){
-        if(prop['time']==Activitie['time']){
+        if(prop.time==item.time){
           prop = {
           time:time, 
-          name:Activitie['name'], 
-          color:Activitie['color'], 
-          colorText:Activitie['colorText']
+          name:item.name, 
+          color:item.color, 
+          colorText:item.colorText
           };
-        }
-    }
+        };
+    };
+    setData(day);
   };
 
   useEffect(() => {
@@ -87,27 +98,26 @@ const screen = () => {
     return (
       <Item
         item={item}
-        onPress={[setTime(item.time), console.log('b')]}
+        onPress={ () => changeTime(item.time) }
         style={{ backgroundColor }}
         styleText={{ color }}
       />
     );
   };
 
-  const renderItemActivities = ({item }) => {
+  const renderItem2 = ({ item }) => {
     const backgroundColor = item.color;
     const color = item.colorText;
 
     return (
-      <ItemActivities
+      <Item2
         item={item}
-        onPress={changeItem(data, time, item)}
+        onPress={ () => changeItem(item) }
         style={{ backgroundColor }}
         styleText={{ color }}
       />
     );
   };
-
 
   const renderInner = () => (
     <View style={styles.panel}>
@@ -118,17 +128,17 @@ const screen = () => {
         <Text style={styles.panelSubtitle}>
           Só Será salva clicando em "salvar alterações"
         </Text>
+        <Text style={styles.panelTitle}>
+          {time}
+        </Text>
         <FlatList
-          //horizontal={true}
           data={activities}
-          renderItem={renderItemActivities}
-          //keyExtractor={(item) => item.id}
-          //extraData={selectedId}
+          renderItem={renderItem2}
         />
       </View>
       <View> 
-        <Text style={{fontSize:82}}
-          // gambirra pra arrumar o bug do buttomsheet com flatlist
+        <Text style={{fontSize:70}}
+          // gambirra pra arrumar o bug d flatlist no buttomsheet
         >          
         </Text>
       </View>
@@ -143,9 +153,6 @@ const screen = () => {
     </View>
   );
 
-  const bs = React.createRef();
-  const fall = new Animated.Value(1);
-
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity style={styles.item2} onPress={saveChanges}>
@@ -153,20 +160,15 @@ const screen = () => {
           Salvar alterações
         </Text>
       </TouchableOpacity>
-      <ScrollView>
       <FlatList
-        //horizontal={true}
         data={data}
         renderItem={renderItem}
-        //keyExtractor={(item) => item.id}
-        //extraData={selectedId}
       />
-      </ScrollView>
-        <Text style={{fontSize:40}}>
+        <Text style={{fontSize:36}}>
         </Text>
       <BottomSheet
         ref={bs}
-        snapPoints={['7%','65%']}
+        snapPoints={['7%','26%','65%']}
         renderContent={renderInner}
         renderHeader={renderHeader}
         initialSnap={0}
@@ -177,80 +179,5 @@ const screen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor:'#191919',
-    //marginTop: StatusBar.currentHeight || 0,
-  },
-  item: {
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    borderRadius: 20
-  },
-  item2: {
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    backgroundColor: '#ffffff',
-    borderRadius: 20
-  },
-  title: {
-    fontSize: 18,
-    justifyContent: 'center',
-    textAlign: 'center',
-    alignItems: 'center',
-  },
-  title2: {
-    fontSize: 32,
-    justifyContent: 'center',
-    textAlign: 'center',
-    alignItems: 'center',
-    color: '#ffff'
-  },
-  panel: {
-    padding: 20,
-    backgroundColor: '#9ACD32',
-    paddingTop: 20,
-    // borderTopLeftRadius: 20,
-    // borderTopRightRadius: 20,
-    // shadowColor: '#000000',
-    // shadowOffset: {width: 0, height: 0},
-    // shadowRadius: 5,
-    // shadowOpacity: 0.4,
-  },
-  header: {
-    backgroundColor: '#9ACD32',
-    shadowColor: '#333333',
-    shadowOffset: {width: -1, height: -3},
-    shadowRadius: 2,
-    shadowOpacity: 0.4,
-    // elevation: 5,
-    paddingTop: 20,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-  },
-  panelHeader: {
-    alignItems: 'center',
-  },
-  panelHandle: {
-    width: 40,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#00000040',
-    marginBottom: 10,
-  },
-  panelTitle: {
-    fontSize: 22,
-    height: 35,
-  },
-  panelSubtitle: {
-    fontSize: 12,
-    color: 'gray',
-    height: 30,
-    marginBottom: 10,
-  },
-});
 
 export default screen;
