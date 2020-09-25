@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import AsyncStorage from '@react-native-community/async-storage';
 import { SaveItem } from '../../../services/storage'
-import { FlatList, SafeAreaView, ScrollView , StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity as RNGHTouchableOpacity } from 'react-native-gesture-handler';
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
 import { exempleData, exempleActivities } from '../../../exemples'
-import {styles} from './styles'
+import {styles} from '../styles'
 
 
 const Item = ({ item, onPress, style, styleText }) => (
@@ -16,16 +17,16 @@ const Item = ({ item, onPress, style, styleText }) => (
 );
 
 const Item2 = ({ item, onPress, style, styleText }) => (
-  <TouchableOpacity style={[styles.item, style]} onPress={onPress}>
+  <RNGHTouchableOpacity style={[styles.item, style]} onPress={onPress}>
     <Text style={[styles.title, styleText]}> {item.name} </Text>
-  </TouchableOpacity>
+  </RNGHTouchableOpacity>
 );
 
 
 
 
 const screen = () => {
-  const bs = React.createRef();
+  const bs = useRef(null);
   const fall = new Animated.Value(1);
 
   const [data, setData] = useState(exempleData);       
@@ -33,28 +34,29 @@ const screen = () => {
   const [time, setTime] = useState('06:00');
    
   function saveChanges(){
-    bs.current.snapTo(0);
     SaveItem('monday',  JSON.stringify(data));
+    bs.current?.snapTo(0);
   };
 
   function changeTime(time){
+    bs.current?.snapTo(2);
     setTime(time);
-    bs.current.snapTo(2);
   };
 
   function changeItem(item){
-    bs.current.snapTo(1);
+    bs.current?.snapTo(1);
     var day = data;
-    for(var prop in day){
-        if(prop.time==item.time){
-          prop = {
-          time:time, 
-          name:item.name, 
-          color:item.color, 
-          colorText:item.colorText
-          };
+    for(var i in day){
+      if(day[i].time==time){
+        day[i] = {
+        time:time, 
+        name:item.name, 
+        color:item.color, 
+        colorText:item.colorText
         };
+      };
     };
+    console.log(day);
     setData(day);
   };
 
@@ -65,6 +67,7 @@ const screen = () => {
     AsyncStorage.getItem('monday').then((response) => {
     const value = response;
     if(value !== null){ 
+      console.log('Data found')
       setData(JSON.parse(value));
     };
   });
@@ -87,7 +90,7 @@ const screen = () => {
     console.log(error)  
   };
 
-  });
+  }, []);
 
 
 
@@ -134,6 +137,7 @@ const screen = () => {
         <FlatList
           data={activities}
           renderItem={renderItem2}
+          keyExtractor={(item) => item.name}
         />
       </View>
       <View> 
@@ -163,11 +167,14 @@ const screen = () => {
       <FlatList
         data={data}
         renderItem={renderItem}
+        keyExtractor={(item) => item.time}
+        extraData={setData}
       />
         <Text style={{fontSize:36}}>
         </Text>
       <BottomSheet
         ref={bs}
+        componentType="FlatList"
         snapPoints={['7%','26%','65%']}
         renderContent={renderInner}
         renderHeader={renderHeader}

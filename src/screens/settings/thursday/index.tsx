@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import AsyncStorage from '@react-native-community/async-storage';
 import { SaveItem } from '../../../services/storage'
 import { FlatList, SafeAreaView, ScrollView , StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
 import { exempleData, exempleActivities } from '../../../exemples'
+import {styles} from '../styles'
 
 
 const Item = ({ item, onPress, style, styleText }) => (
@@ -14,7 +15,7 @@ const Item = ({ item, onPress, style, styleText }) => (
   </TouchableOpacity>
 );
 
-const ItemActivities = ({ item, onPress, style, styleText }) => (
+const Item2 = ({ item, onPress, style, styleText }) => (
   <TouchableOpacity style={[styles.item, style]} onPress={onPress}>
     <Text style={[styles.title, styleText]}> {item.name} </Text>
   </TouchableOpacity>
@@ -24,7 +25,7 @@ const ItemActivities = ({ item, onPress, style, styleText }) => (
 
 
 const screen = () => {
-  const bs = React.createRef();
+  const bs = useRef(null);
   const fall = new Animated.Value(1);
 
   const [data, setData] = useState(exempleData);       
@@ -32,11 +33,17 @@ const screen = () => {
   const [time, setTime] = useState('06:00');
    
   function saveChanges(){
-    SaveItem('thursday',  JSON.stringify(data));
+    SaveItem('monday',  JSON.stringify(data));
+    bs.current?.snapTo(0);
+  };
+
+  function changeTime(time){
+    setTime(time);
+    bs.current?.snapTo(2);
   };
 
   function changeItem(item){
-    console.log(item);
+    bs.current?.snapTo(1);
     var day = data;
     for(var prop in day){
         if(prop.time==item.time){
@@ -55,9 +62,10 @@ const screen = () => {
 
   try {
   
-    AsyncStorage.getItem('thursday').then((response) => {
+    AsyncStorage.getItem('monday').then((response) => {
     const value = response;
     if(value !== null){ 
+      console.log('Data found')
       setData(JSON.parse(value));
     };
   });
@@ -80,7 +88,7 @@ const screen = () => {
     console.log(error)  
   };
 
-  });
+  }, []);
 
 
 
@@ -91,21 +99,21 @@ const screen = () => {
     return (
       <Item
         item={item}
-        onPress={() => setTime(item.time)}
+        onPress={ () => changeTime(item.time) }
         style={{ backgroundColor }}
         styleText={{ color }}
       />
     );
   };
 
-  const renderItemActivities = ({ item }) => {
+  const renderItem2 = ({ item }) => {
     const backgroundColor = item.color;
     const color = item.colorText;
 
     return (
-      <ItemActivities
+      <Item2
         item={item}
-        onPress={() => changeItem(item)}
+        onPress={ () => changeItem(item) }
         style={{ backgroundColor }}
         styleText={{ color }}
       />
@@ -125,16 +133,14 @@ const screen = () => {
           {time}
         </Text>
         <FlatList
-          //horizontal={true}
           data={activities}
-          renderItem={renderItemActivities}
-          //keyExtractor={(item) => item.id}
-          //extraData={selectedId}
+          renderItem={renderItem2}
+          keyExtractor={(item) => item.name}
         />
       </View>
       <View> 
-        <Text style={{fontSize:82}}
-          // gambirra pra arrumar o bug do buttomsheet com flatlist
+        <Text style={{fontSize:70}}
+          // gambirra pra arrumar o bug d flatlist no buttomsheet
         >          
         </Text>
       </View>
@@ -156,19 +162,16 @@ const screen = () => {
           Salvar alterações
         </Text>
       </TouchableOpacity>
-      <ScrollView>
       <FlatList
-        //horizontal={true}
         data={data}
         renderItem={renderItem}
-        //keyExtractor={(item) => item.id}
-        //extraData={selectedId}
+        keyExtractor={(item) => item.time}
       />
-      </ScrollView>
-        <Text style={{fontSize:40}}>
+        <Text style={{fontSize:36}}>
         </Text>
       <BottomSheet
         ref={bs}
+        componentType="FlatList"
         snapPoints={['7%','26%','65%']}
         renderContent={renderInner}
         renderHeader={renderHeader}
@@ -180,80 +183,5 @@ const screen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor:'#191919',
-    //marginTop: StatusBar.currentHeight || 0,
-  },
-  item: {
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    borderRadius: 20
-  },
-  item2: {
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    backgroundColor: '#ffffff',
-    borderRadius: 20
-  },
-  title: {
-    fontSize: 18,
-    justifyContent: 'center',
-    textAlign: 'center',
-    alignItems: 'center',
-  },
-  title2: {
-    fontSize: 32,
-    justifyContent: 'center',
-    textAlign: 'center',
-    alignItems: 'center',
-    color: '#ffff'
-  },
-  panel: {
-    padding: 20,
-    backgroundColor: '#9ACD32',
-    paddingTop: 20,
-    // borderTopLeftRadius: 20,
-    // borderTopRightRadius: 20,
-    // shadowColor: '#000000',
-    // shadowOffset: {width: 0, height: 0},
-    // shadowRadius: 5,
-    // shadowOpacity: 0.4,
-  },
-  header: {
-    backgroundColor: '#9ACD32',
-    shadowColor: '#333333',
-    shadowOffset: {width: -1, height: -3},
-    shadowRadius: 2,
-    shadowOpacity: 0.4,
-    // elevation: 5,
-    paddingTop: 20,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-  },
-  panelHeader: {
-    alignItems: 'center',
-  },
-  panelHandle: {
-    width: 40,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#00000040',
-    marginBottom: 10,
-  },
-  panelTitle: {
-    fontSize: 22,
-    height: 35,
-  },
-  panelSubtitle: {
-    fontSize: 12,
-    color: 'gray',
-    height: 30,
-    marginBottom: 10,
-  },
-});
 
 export default screen;
