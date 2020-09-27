@@ -32,6 +32,8 @@ const screen = () => {
   const [data, setData] = useState(exempleData);       
   const [activities, setActivities] = useState(exempleActivities);
   const [time, setTime] = useState('06:00');
+  const [reRender, setReRender] = useState(1);
+
    
   function saveChanges(){
     SaveItem('Saturday',  JSON.stringify(data));
@@ -57,6 +59,7 @@ const screen = () => {
       };
     };
     setData(day);
+    setReRender(reRender + 1);
   };
 
   useEffect(() => {
@@ -156,6 +159,7 @@ const screen = () => {
     </View>
   );
 
+  
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity style={styles.item2} onPress={saveChanges}>
@@ -167,7 +171,7 @@ const screen = () => {
         data={data}
         renderItem={renderItem}
         keyExtractor={(item) => item.time}
-        extraData={setData}
+        extraData={reRender}
       />
         <Text style={{fontSize:36}}>
         </Text>

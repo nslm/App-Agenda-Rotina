@@ -19,10 +19,13 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.yourcompany.yourappname",
+      "buildNumber": "1.0.0"
     },
-    "web": {
-      "favicon": "./assets/images/favicon.png"
+    "android": {
+      "package": "com.nslm.rotina",
+      "versionCode": 1
     }
   }
 }
