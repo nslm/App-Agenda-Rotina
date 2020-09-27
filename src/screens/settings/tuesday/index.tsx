@@ -33,7 +33,7 @@ const screen = () => {
   const [time, setTime] = useState('06:00');
    
   function saveChanges(){
-    SaveItem('monday',  JSON.stringify(data));
+    SaveItem('tuesday',  JSON.stringify(data));
     bs.current?.snapTo(0);
   };
 
@@ -62,7 +62,7 @@ const screen = () => {
 
   try {
   
-    AsyncStorage.getItem('monday').then((response) => {
+    AsyncStorage.getItem('tuesday').then((response) => {
     const value = response;
     if(value !== null){ 
       console.log('Data found')

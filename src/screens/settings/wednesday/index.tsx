@@ -1,7 +1,8 @@
 import React, { useRef, useEffect, useState } from "react";
 import AsyncStorage from '@react-native-community/async-storage';
 import { SaveItem } from '../../../services/storage'
-import { FlatList, SafeAreaView, ScrollView , StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity as RNGHTouchableOpacity } from 'react-native-gesture-handler';
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
 import { exempleData, exempleActivities } from '../../../exemples'
@@ -16,9 +17,9 @@ const Item = ({ item, onPress, style, styleText }) => (
 );
 
 const Item2 = ({ item, onPress, style, styleText }) => (
-  <TouchableOpacity style={[styles.item, style]} onPress={onPress}>
+  <RNGHTouchableOpacity style={[styles.item, style]} onPress={onPress}>
     <Text style={[styles.title, styleText]}> {item.name} </Text>
-  </TouchableOpacity>
+  </RNGHTouchableOpacity>
 );
 
 
@@ -33,28 +34,29 @@ const screen = () => {
   const [time, setTime] = useState('06:00');
    
   function saveChanges(){
-    SaveItem('monday',  JSON.stringify(data));
+    SaveItem('wednesday',  JSON.stringify(data));
     bs.current?.snapTo(0);
   };
 
   function changeTime(time){
-    setTime(time);
     bs.current?.snapTo(2);
+    setTime(time);
   };
 
   function changeItem(item){
     bs.current?.snapTo(1);
     var day = data;
-    for(var prop in day){
-        if(prop.time==item.time){
-          prop = {
-          time:time, 
-          name:item.name, 
-          color:item.color, 
-          colorText:item.colorText
-          };
+    for(var i in day){
+      if(day[i].time==time){
+        day[i] = {
+        time:time, 
+        name:item.name, 
+        color:item.color, 
+        colorText:item.colorText
         };
+      };
     };
+    console.log(day);
     setData(day);
   };
 
@@ -62,7 +64,7 @@ const screen = () => {
 
   try {
   
-    AsyncStorage.getItem('monday').then((response) => {
+    AsyncStorage.getItem('wednesday').then((response) => {
     const value = response;
     if(value !== null){ 
       console.log('Data found')
@@ -166,6 +168,7 @@ const screen = () => {
         data={data}
         renderItem={renderItem}
         keyExtractor={(item) => item.time}
+        extraData={setData}
       />
         <Text style={{fontSize:36}}>
         </Text>
