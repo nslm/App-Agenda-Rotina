@@ -32,9 +32,11 @@ const screen = () => {
   const [data, setData] = useState(exempleData);       
   const [activities, setActivities] = useState(exempleActivities);
   const [time, setTime] = useState('06:00');
+  const [reRender, setReRender] = useState(1);
+
    
   function saveChanges(){
-    SaveItem('monday',  JSON.stringify(data));
+    SaveItem('Monday',  JSON.stringify(data));
     bs.current?.snapTo(0);
   };
 
@@ -56,15 +58,15 @@ const screen = () => {
         };
       };
     };
-    console.log(day);
     setData(day);
+    setReRender(reRender + 1);
   };
 
   useEffect(() => {
 
   try {
   
-    AsyncStorage.getItem('monday').then((response) => {
+    AsyncStorage.getItem('Monday').then((response) => {
     const value = response;
     if(value !== null){ 
       console.log('Data found')
@@ -157,6 +159,7 @@ const screen = () => {
     </View>
   );
 
+  
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity style={styles.item2} onPress={saveChanges}>
@@ -168,7 +171,7 @@ const screen = () => {
         data={data}
         renderItem={renderItem}
         keyExtractor={(item) => item.time}
-        extraData={setData}
+        extraData={reRender}
       />
         <Text style={{fontSize:36}}>
         </Text>
