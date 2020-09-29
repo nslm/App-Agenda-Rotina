@@ -8,7 +8,7 @@ const Item = ({ item, style, styleText }) => (
   </TouchableOpacity>
 );
 
-const [data, setData] useState(exempleData);
+const [data, setData] = useState(exempleData);
 
 const lista = () => {
 
