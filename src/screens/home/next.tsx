@@ -8,10 +8,11 @@ const Item = ({ item, style, styleText }) => (
   </TouchableOpacity>
 );
 
-const [data, setData] = useState(exempleData);
 
 const lista = () => {
-
+  
+  const [data, setData] = useState(exempleData);
+  
   const renderItem = ({ item }) => {
     const backgroundColor = item.color;
     const color = item.colorText;

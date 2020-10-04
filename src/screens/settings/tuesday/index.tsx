@@ -33,6 +33,8 @@ const screen = () => {
   const [activities, setActivities] = useState(exempleActivities);
   const [time, setTime] = useState('06:00');
   const [reRender, setReRender] = useState(1);
+  const [theme, setTheme] = useState();
+  const [color, setColor] = useState();
 
    
   function saveChanges(){
@@ -90,6 +92,33 @@ const screen = () => {
   } catch (error) {  
     console.log("Error to get saved data");
     console.log(error)  
+  };
+
+  try {    
+    AsyncStorage.getItem('Theme').then((response) => {
+    const value = response;
+    if(value !== null){ 
+      console.log('Theme found: '+value);
+      setTheme(value);
+    };
+  });
+      
+  } catch (error) {  
+    console.log("Error to get saved Theme");
+    console.log(error);
+  };
+  try {    
+    AsyncStorage.getItem('Color').then((response) => {
+    const value = response;
+    if(value !== null){ 
+      console.log('Color found: '+value);
+      setColor(value);
+    };
+  });
+      
+  } catch (error) {  
+    console.log("Error to get saved Color");
+    console.log(error);
   };
 
   }, []);
@@ -152,7 +181,7 @@ const screen = () => {
   );
 
   const renderHeader = () => (
-    <View style={styles.header}>
+    <View style={[styles.header, { backgroundColor: color }]}>
       <View style={styles.panelHeader}>
         <View style={styles.panelHandle} />
       </View>
@@ -161,8 +190,8 @@ const screen = () => {
 
   
   return (
-    <SafeAreaView style={styles.container}>
-      <TouchableOpacity style={styles.item2} onPress={saveChanges}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme }]}>
+      <TouchableOpacity style={[styles.item2, { backgroundColor: color }]} onPress={saveChanges}>
         <Text>
           Salvar alterações
         </Text>
@@ -178,7 +207,7 @@ const screen = () => {
       <BottomSheet
         ref={bs}
         componentType="FlatList"
-        snapPoints={['7%','26%','65%']}
+        snapPoints={['6%','26%','65%']}
         renderContent={renderInner}
         renderHeader={renderHeader}
         initialSnap={0}
