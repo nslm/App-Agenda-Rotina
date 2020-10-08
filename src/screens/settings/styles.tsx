@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
 
 
 export const styles = StyleSheet.create({
     container: {
       flex:1,
-      backgroundColor: '#ffffff',
+      backgroundColor: '#fff',
       //marginTop: StatusBar.currentHeight || 0,
     },
     item: {
@@ -19,7 +18,7 @@ export const styles = StyleSheet.create({
       padding: 20,
       marginVertical: 8,
       marginHorizontal: 16,
-      backgroundColor: '#9ACD32',
+      backgroundColor: '#fff',
       borderRadius: 20
     },
     title: {

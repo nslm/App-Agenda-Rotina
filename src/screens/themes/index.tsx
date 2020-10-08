@@ -1,19 +1,15 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import { SaveItem } from '../../services/storage';
 import BottomSheet from 'reanimated-bottom-sheet';
 import { TouchableOpacity as RNGHTouchableOpacity } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
-import { View, 
-    KeyboardAvoidingView, 
-    Image, 
-    TextInput,  
+import ThemeContext from '../../contexts/theme';
+import { View,  
     TouchableOpacity, 
-    Text, 
-    StyleSheet,
-    Keyboard 
+    Text,
     } from 'react-native';
-import {styles} from './styles'
+import {styles} from './styles';
 
 
 export default function () {
@@ -21,50 +17,10 @@ export default function () {
     const bs2 = useRef(null);
     const fall = new Animated.Value(1);
 
-    const [theme, setTheme] = useState('#ffffff');
-    const [color, setColor] = useState('#9ACD32');
+    const {theme, color, changeTheme, changeColor} = useContext(ThemeContext);
 
-    useEffect(() => {
-        try {    
-            AsyncStorage.getItem('Theme').then((response) => {
-            const value = response;
-            if(value !== null){ 
-              console.log('Theme found: '+value);
-              setTheme(value);
-            };
-          });
-              
-          } catch (error) {  
-            console.log("Error to get saved Theme");
-            console.log(error);
-        };
-        try {    
-            AsyncStorage.getItem('Color').then((response) => {
-            const value = response;
-            if(value !== null){ 
-              console.log('Color found: '+value);
-              setColor(value);
-            };
-          });
-              
-          } catch (error) {  
-            console.log("Error to get saved Color");
-            console.log(error);
-        };
-    }, []);
 
-    function changeThemeDark() {
-        setTheme('#191919');
-        SaveItem('Theme', '#191919');
-    };
-    function changeThemeLight() {
-        setTheme('#ffffff');
-        SaveItem('Theme', '#ffffff');
-    };
-    function changeColor(color:String) {
-        setColor(color);
-        SaveItem('Color', color);
-    };
+
     function openBS1() {
         bs2.current?.snapTo(0);
         bs1.current?.snapTo(1);
@@ -76,12 +32,12 @@ export default function () {
 
     const renderInner1 = () => (
         <View style={ styles.background2 }>
-            <RNGHTouchableOpacity style={[styles.button, { backgroundColor: color }]} onPress={changeThemeLight}>
+            <RNGHTouchableOpacity style={[styles.button, { backgroundColor: color }]} onPress={() => changeTheme('#ffffff')}>
                 <Text>
                     Claro
                 </Text>
             </RNGHTouchableOpacity>
-            <RNGHTouchableOpacity style={[styles.button, { backgroundColor:color }]} onPress={changeThemeDark}>
+            <RNGHTouchableOpacity style={[styles.button, { backgroundColor:color }]} onPress={() => changeTheme('#191919')}>
                 <Text>
                     Escuro
                 </Text>

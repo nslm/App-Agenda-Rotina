@@ -1,12 +1,14 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import AsyncStorage from '@react-native-community/async-storage';
 import { SaveItem } from '../../../services/storage'
 import { FlatList, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import { TouchableOpacity as RNGHTouchableOpacity } from 'react-native-gesture-handler';
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
-import { exempleData, exempleActivities } from '../../../exemples'
-import {styles} from '../styles'
+import { exempleData, exempleActivities } from '../../../exemples';
+import { styles } from '../styles';
+import ThemeContext from '../../../contexts/theme';
+
 
 
 const Item = ({ item, onPress, style, styleText }) => (
@@ -33,9 +35,8 @@ const screen = () => {
   const [activities, setActivities] = useState(exempleActivities);
   const [time, setTime] = useState('06:00');
   const [reRender, setReRender] = useState(1);
-  const [theme, setTheme] = useState();
-  const [color, setColor] = useState();
 
+  const {theme, color} = useContext(ThemeContext);
    
   function saveChanges(){
     SaveItem('Monday',  JSON.stringify(data));

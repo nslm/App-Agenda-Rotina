@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import AsyncStorage from '@react-native-community/async-storage';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import ThemeContext from '../../contexts/theme';
+
 import { AntDesign } from '@expo/vector-icons'; 
 import { Entypo } from '@expo/vector-icons'; 
+
 import now from './now';
 import next from './next';
 import overview from './overview';
@@ -13,6 +17,9 @@ const Tab = createBottomTabNavigator();
 
 
 export default function () {
+
+    const { theme, color } = useContext(ThemeContext);    
+
     return (
     <Tab.Navigator
         screenOptions={({ route }) => ({
@@ -48,7 +55,7 @@ export default function () {
             activeTintColor: '#ffffff',
             inactiveTintColor: '#000000',
             style:{
-            backgroundColor: '#9ACD32',
+            backgroundColor: color,
             alignItems: 'center',
             justfyContext: 'center'
             }

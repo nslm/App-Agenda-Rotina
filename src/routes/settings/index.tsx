@@ -1,5 +1,8 @@
+import React, { useState, useEffect, useContext } from "react";
+import AsyncStorage from '@react-native-community/async-storage';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import React from "react";
+import ThemeContext from '../../contexts/theme';
+
 import monday from './monday';
 import tuesday from './tuesday';
 import wednesday from './wednesday';
@@ -12,12 +15,15 @@ import sunday from './sunday';
 const Tab = createMaterialTopTabNavigator();
 
 function MyTabs() {
+
+  const { theme, color } = useContext(ThemeContext);
+
   return (
     <Tab.Navigator
     tabBarOptions={{
       labelStyle: { fontSize: 12 },
       tabStyle: { width: 100 },
-      style: { backgroundColor: '#9ACD32' },
+      style: { backgroundColor: color },
       scrollEnabled: true,
     }}
     >
