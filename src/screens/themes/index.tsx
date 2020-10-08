@@ -1,6 +1,4 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
-import AsyncStorage from '@react-native-community/async-storage';
-import { SaveItem } from '../../services/storage';
 import BottomSheet from 'reanimated-bottom-sheet';
 import { TouchableOpacity as RNGHTouchableOpacity } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';

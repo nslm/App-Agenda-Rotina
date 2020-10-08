@@ -1,12 +1,14 @@
-import React, { useRef, useEffect, useState } from "react";
-import AsyncStorage from '@react-native-community/async-storage';
-import { SaveItem } from '../../../services/storage'
+import React, { useRef, useState, useContext } from "react";
 import { FlatList, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import { TouchableOpacity as RNGHTouchableOpacity } from 'react-native-gesture-handler';
+
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
-import { exempleData, exempleActivities } from '../../../exemples'
-import {styles} from '../styles'
+
+import { styles } from '../styles';
+
+import ThemeContext from '../../../contexts/theme';
+import DataContext from '../../../contexts/data';
 
 
 const Item = ({ item, onPress, style, styleText }) => (
@@ -29,99 +31,26 @@ const screen = () => {
   const bs = useRef(null);
   const fall = new Animated.Value(1);
 
-  const [data, setData] = useState(exempleData);       
-  const [activities, setActivities] = useState(exempleActivities);
   const [time, setTime] = useState('06:00');
-  const [reRender, setReRender] = useState(1);
-  const [theme, setTheme] = useState();
-  const [color, setColor] = useState();
+  const [reRender, setReRender] = useState(0);
+
+  const {theme, color} = useContext(ThemeContext);
+  const {sunday, changeSunday, activities} = useContext(DataContext);
+
+  const data = sunday;
 
    
-  function saveChanges(){
-    SaveItem('Sunday',  JSON.stringify(data));
+  function changeItem(item:Object){
     bs.current?.snapTo(0);
+    changeSunday(item, time);
+    setReRender(reRender + 1);
   };
 
-  function changeTime(time){
+  function changeTime(time:string){
     bs.current?.snapTo(2);
     setTime(time);
   };
 
-  function changeItem(item){
-    bs.current?.snapTo(1);
-    var day = data;
-    for(var i in day){
-      if(day[i].time==time){
-        day[i] = {
-        time:time, 
-        name:item.name, 
-        color:item.color, 
-        colorText:item.colorText
-        };
-      };
-    };
-    setData(day);
-    setReRender(reRender + 1);
-  };
-
-  useEffect(() => {
-
-  try {
-  
-    AsyncStorage.getItem('Sunday').then((response) => {
-    const value = response;
-    if(value !== null){ 
-      console.log('Data found')
-      setData(JSON.parse(value));
-    };
-  });
-      
-  } catch (error) {  
-    console.log("Error to get saved data");
-    console.log(error)  
-  };
-  try {
-  
-    AsyncStorage.getItem('activities').then((response) => {
-    const value = response;
-    if(value !== null){ 
-      setActivities(JSON.parse(value));
-    };
-  });
-      
-  } catch (error) {  
-    console.log("Error to get saved data");
-    console.log(error)  
-  };
-
-  try {    
-    AsyncStorage.getItem('Theme').then((response) => {
-    const value = response;
-    if(value !== null){ 
-      console.log('Theme found: '+value);
-      setTheme(value);
-    };
-  });
-      
-  } catch (error) {  
-    console.log("Error to get saved Theme");
-    console.log(error);
-  };
-  try {    
-    AsyncStorage.getItem('Color').then((response) => {
-    const value = response;
-    if(value !== null){ 
-      console.log('Color found: '+value);
-      setColor(value);
-    };
-  });
-      
-  } catch (error) {  
-    console.log("Error to get saved Color");
-    console.log(error);
-  };
-
-  }, []);
 
 
 
@@ -160,7 +89,7 @@ const screen = () => {
           Selecione a Atividade
         </Text>
         <Text style={styles.panelSubtitle}>
-          Só Será salva clicando em "salvar alterações"
+          Será Salvo Automaticamente
         </Text>
         <Text style={styles.panelTitle}>
           {time}
@@ -191,11 +120,6 @@ const screen = () => {
   
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme }]}>
-      <TouchableOpacity style={[styles.item2, { backgroundColor: color }]} onPress={saveChanges}>
-        <Text>
-          Salvar alterações
-        </Text>
-      </TouchableOpacity>
       <FlatList
         data={data}
         renderItem={renderItem}

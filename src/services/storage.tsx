@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import React, { useState } from 'react';
+import { exempleData } from '../exemples'
+//import React, { useState } from 'react';
 
 export async function SaveItem(name:string, item:string) {
 
@@ -29,32 +30,25 @@ async function GetItem(item:string) {
   }
 };
 
-export async function saveActivities(activities:Array<Object>){
-  try {
+export function changeItem(nameDay:string, DataOfday:Array<Object>, setDay:Function, item:Object, time:string){
+  var dataEdit = DataOfday;
 
-    await AsyncStorage.setItem('activities', JSON.stringify(activities)); 
-    console.log('saved!');
-
-  } catch (error) {
-
-    console.log("Error to get saved data");
-
-  }
-}
-
-export async function getActivities(){
-  const [list, setList] = useState(null)
-  try {
-
-    const value =  await AsyncStorage.getItem('activities'); 
-    setList(value);
-
-  } catch (error) {
-
-    console.log("Error to get saved data");
-
+  for(var i in dataEdit){
+    if(dataEdit[i].time==time){
+      dataEdit[i] = {
+      time:time, 
+      name:item.name, 
+      color:item.color, 
+      colorText:item.colorText
+      };
+    };
   };
-  if(list !== null){
-    return JSON.parse(list);
+  setDay(dataEdit);
+  try {
+    AsyncStorage.setItem(nameDay, JSON.stringify(dataEdit));
+    console.log("Data Changed");
+  } catch (error) {
+    console.log("Error to save data");
+    console.log(error);
   };
-}
+};

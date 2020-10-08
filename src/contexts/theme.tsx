@@ -5,7 +5,7 @@ interface ContextData {
     color: string;
     changeColor: Function;
     changeTheme: Function;
-}
+};
 
 
 export const ThemeContext = createContext<ContextData>( {} as ContextData);

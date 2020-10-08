@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import AsyncStorage from '@react-native-community/async-storage';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import ThemeContext from '../../contexts/theme';
 

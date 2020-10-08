@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
-import AsyncStorage from '@react-native-community/async-storage';
+import React, { useContext } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ThemeContext from '../../contexts/theme';
 
@@ -18,7 +17,7 @@ const Tab = createBottomTabNavigator();
 
 export default function () {
 
-    const { theme, color } = useContext(ThemeContext);    
+    const { color } = useContext(ThemeContext);    
 
     return (
     <Tab.Navigator
