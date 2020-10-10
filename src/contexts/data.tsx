@@ -99,8 +99,7 @@ export const DataProvider: React.FC = ({ children }) => {
         } catch (error) {  
           console.log("Error to get saved data");
           console.log(error);
-        };
-      
+        };      
         }, []);
 
 
