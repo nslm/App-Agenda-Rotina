@@ -1,4 +1,6 @@
 import React from 'react';
+import { PieChart } from 'react-native-svg-charts';
+import { Table } from '../../services/table';
 import { View, 
     KeyboardAvoidingView, 
     Image, 
@@ -10,15 +12,17 @@ import { View,
     Keyboard 
     } from 'react-native';
 
+
 export default function () {
+
+    const table = Table();
+
+    console.log(table);
 
     return(
         <View style={styles.background}>
-            <Text>
-                overview
-            </Text>
+            <PieChart style={{ height: 400 }} data={table} />
         </View>
-
     );
 
 };
@@ -26,7 +30,9 @@ export default function () {
 const styles = StyleSheet.create({
     background:{
       flex:1,
-      alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor:'#191919',
+      backgroundColor:'#ffffff',
     }});
+
+    
+

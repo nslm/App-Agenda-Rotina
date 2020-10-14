@@ -66,7 +66,7 @@ export const DataProvider: React.FC = ({ children }) => {
         changeItem('Monday', monday, setMonday, item, time);
     };
     function changeTuesday(item:Object, time:string){
-        changeItem('Tuesday', monday, setTuesday, item, time);
+        changeItem('Tuesday', tuesday, setTuesday, item, time);
     };
     function changeWednesday(item:Object, time:string){
         changeItem('Wednesday', wednesday, setWednesday, item, time);
