@@ -1,4 +1,5 @@
 import React from 'react';
+import { time } from '../../services/time';
 import { ProgressCircle } from 'react-native-svg-charts';
 import { View, 
     KeyboardAvoidingView, 
@@ -17,15 +18,20 @@ class ProgressCircleNow extends React.PureComponent {
         return <ProgressCircle style={{ height: '100%', width:'75%' }} progress={0.7} progressColor={'#A12'} backgroundColor={'#191919'}/>
     }
 };
-
+// <ProgressCircleNow/>
 
 
 
 export default function () {
 
+    const lista = time();
+
+
     return(
         <View style={styles.background}>
-            <ProgressCircleNow/>
+            <Text>
+                { dayOfWeek }
+            </Text>
         </View>
 
     );
